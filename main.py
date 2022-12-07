@@ -31,91 +31,91 @@ def isFestiveRelease(releaseDate):
         return True
     return False
 #
-# def getImdbRating(rating):
-#     if (rating):
-#         for i in rating:
-#             if (i.get("Source") and i.get("Source") == 'Internet Movie Database'):
-#                 return i.get("Value").split('/')[0]
-#     return -1
+def getImdbRating(rating):
+    if (rating):
+        for i in rating:
+            if (i.get("Source") and i.get("Source") == 'Internet Movie Database'):
+                return i.get("Value").split('/')[0]
+    return -1
 #
-# def processMovie(moviename):
-#     response = requests.get('https://www.omdbapi.com', params = {'t': moviename,'apikey': '2a2776f'}).json()
-#     #print(response)
-#
-#     if (response and response.get('Response') == 'True'):
-#         #print(response)
-#         movieName = response.get('Title')
-#         releaseDate = response.get('Released')
-#         boxOffice = response.get('BoxOffice')
-#         title = response.get('Title')
-#
-#         if (releaseDate and releaseDate != 'N/A' and boxOffice and boxOffice != 'N/A' and title.lower() not in cachedMovies):
-#             attributesToExtract = { 'Title', 'Year', 'Genre', 'Language', 'BoxOffice' }
-#             responseObject = { key:value for key,value in response.items() if key in attributesToExtract}
-#             responseObject['ReleasedDate'] = datetime.strptime(releaseDate, '%d %b %Y')
-#             responseObject['imdbRating'] = getImdbRating(response.get('Ratings'))
-#             return responseObject
-#         else:
-#             print('Movie from input source not found in OMDB API : ' + movieName)
-#     #rating=response.get('Ratings')
-#     #   response = requests.get('https://www.omdbapi.com', params = {'t':"home+alone",'apikey: 63ba843})
-# recordsToWrite = []
-# counter = 0
-#
+def processMovie(moviename):
+    response = requests.get('https://www.omdbapi.com', params = {'t': moviename,'apikey': '2a2776f'}).json()
+    #print(response)
+
+    if (response and response.get('Response') == 'True'):
+        #print(response)
+        movieName = response.get('Title')
+        releaseDate = response.get('Released')
+        boxOffice = response.get('BoxOffice')
+        title = response.get('Title')
+
+        if (releaseDate and releaseDate != 'N/A' and boxOffice and boxOffice != 'N/A' and title.lower() not in cachedMovies):
+            attributesToExtract = { 'Title', 'Year', 'Genre', 'Language', 'BoxOffice' }
+            responseObject = { key:value for key,value in response.items() if key in attributesToExtract}
+            responseObject['ReleasedDate'] = datetime.strptime(releaseDate, '%d %b %Y')
+            responseObject['imdbRating'] = getImdbRating(response.get('Ratings'))
+            return responseObject
+        else:
+            print('Movie from input source not found in OMDB API : ' + movieName)
+    #rating=response.get('Ratings')
+    #   response = requests.get('https://www.omdbapi.com', params = {'t':"home+alone",'apikey: 63ba843})
+recordsToWrite = []
+counter = 0
+
 #
 # # # Read cached files
-# directory = os.path.join("C:\\", "Users\\krith\\OneDrive\\Desktop\\SI 507\\Final_Project\\cache")
-# for root, dirs, files in os.walk(directory):
-#     for file in files:
-#         print(file)
-#         if file.endswith(".csv"):
-#             with open(directory + '/' + file, 'r') as csv_file:
-#                 csv_reader = csv.reader(csv_file, delimiter=',')
-#                 line_count = 0
-#                 for row in csv_reader:
-#                     if line_count == 0:
-#                         line_count += 1
-#                     else:
-#                         cachedMovieName = row[0];
-#                         # cachedMovieName = row[0].split(',')[0];
-#                         if(cachedMovieName not in cachedMovies):
-#                             cachedMovies.add(cachedMovieName)
-#                         line_count += 1
-# cachedMovies = set(i.lower() for i in cachedMovies)
+directory = os.path.join("C:\\", "Users\\krith\\OneDrive\\Desktop\\SI 507\\Final_Project\\cache")
+for root, dirs, files in os.walk(directory):
+    for file in files:
+        print(file)
+        if file.endswith(".csv"):
+            with open(directory + '/' + file, 'r') as csv_file:
+                csv_reader = csv.reader(csv_file, delimiter=',')
+                line_count = 0
+                for row in csv_reader:
+                    if line_count == 0:
+                        line_count += 1
+                    else:
+                        cachedMovieName = row[0];
+                        # cachedMovieName = row[0].split(',')[0];
+                        if(cachedMovieName not in cachedMovies):
+                            cachedMovies.add(cachedMovieName)
+                        line_count += 1
+cachedMovies = set(i.lower() for i in cachedMovies)
 # print('Cached data:')
 # print(len(cachedMovies))
 # print(cachedMovies)
 #
 #
 # # # Process Input source with cache
-# sourceFile = open('christmas.csv', encoding="utf-8")
-# inputData = pandas.read_csv(sourceFile, encoding='utf-8', delimiter=',')
-# print('InputData count: ' + str(len(inputData.values)))
-# for inputRecord in inputData.values:
-#     if (counter > 100):
-#         break
-#     movieName = inputRecord[2]
-#     lowerMovieName = movieName.lower()
-#     if lowerMovieName in cachedMovies:
-#         print("Movie in cache.. skipping. Name: " + movieName)
-#     else:
-#         print("Movie not in cache.. making API call to OMDB: " + movieName)
-#         recordToWrite = processMovie(movieName)
-#         if (recordToWrite):
-#             counter = counter + 1
-#             recordsToWrite.append(recordToWrite)
-#
+sourceFile = open('christmas.csv', encoding="utf-8")
+inputData = pandas.read_csv(sourceFile, encoding='utf-8', delimiter=',')
+print('InputData count: ' + str(len(inputData.values)))
+for inputRecord in inputData.values:
+    if (counter > 100):
+        break
+    movieName = inputRecord[2]
+    lowerMovieName = movieName.lower()
+    if lowerMovieName in cachedMovies:
+        print("Movie in cache.. skipping. Name: " + movieName)
+    else:
+        print("Movie not in cache.. making API call to OMDB: " + movieName)
+        recordToWrite = processMovie(movieName)
+        if (recordToWrite):
+            counter = counter + 1
+            recordsToWrite.append(recordToWrite)
+
 # # # Write new items from API to cache
-# fieldNames = ['Title', 'Year', 'Genre', 'Language', 'BoxOffice', 'ReleasedDate', 'imdbRating']
-# randomNumber = random.random()
-# fileName = '/Users/psridhar1/Downloads/python-proj/cache/cacheFile_' + str(randomNumber) + '.csv'
-# with open(fileName, 'w', newline='') as csvFile:
-#     csvwriter = csv.DictWriter(csvFile, fieldNames)
-#     csvwriter.writeheader()
-#     csvwriter.writerows(recordsToWrite)
-# print('Done writing new cache file')
-#
-#
+fieldNames = ['Title', 'Year', 'Genre', 'Language', 'BoxOffice', 'ReleasedDate', 'imdbRating']
+randomNumber = random.random()
+fileName = 'Users\\krith\\OneDrive\\Desktop\\SI 507\\Final_Project\\cachecacheFile_' + str(randomNumber) + '.csv'
+with open(fileName, 'w', newline='') as csvFile:
+    csvwriter = csv.DictWriter(csvFile, fieldNames)
+    csvwriter.writeheader()
+    csvwriter.writerows(recordsToWrite)
+print('Done writing new cache file')
+
+
 # Read updated cache files and prepare datasets
 featureMovieSet = set()
 festiveRecords = []
@@ -178,3 +178,4 @@ festive_fig.show()
 
 
 # https://www.omdbapi.com/?t=conjuring&apikey=63ba843
+
