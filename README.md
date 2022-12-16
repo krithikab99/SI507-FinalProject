@@ -34,3 +34,13 @@ Some interesting trends were identified that can be viewed by the user if they w
 2) Want to see how the box office collection ranks against the year of release for both festive and non-festive movies?
 3) Youll be surprised in how the Year ranks against the imdbRating for both festive and non-festive movies?
 4) Do you want to know the difference in how the Box Office revenue ranks against the year of release wrt to the imdbRating for both festive and non-festive movies?
+
+
+Steps to access the API key:
+1) Open url https://www.omdbapi.com/apikey.aspx 
+2) Under generate API key choose "Free"
+3) Provide email id, name and use
+4) A API key will get sent to the mail id
+
+For now, I have created a new key that can be used to fetch the records : d61de815
+This needs to be added to line 44 of the main.py file
