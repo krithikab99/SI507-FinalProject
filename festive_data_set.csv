@@ -1,21 +1,23 @@
-Title,BoxOffice,imdbRating
-"Hello, Dolly!",400881,7.0
-Fantastic Mr. Fox,21002919,7.9
-Avatar,785221649,7.8
-Becoming Cousteau,231687,7.1
-Alvin and the Chipmunks: Chipwrecked,133110742,4.3
-Alvin and the Chipmunks,217326974,5.2
-Alvin and the Chipmunks: The Road Chip,85886987,4.9
-Eragon,75030163,5.1
-Mrs. Doubtfire,219195243,7.1
-We Bought a Zoo,75624550,7.1
-Night at the Museum,250863268,6.4
-Cheaper by the Dozen 2,82571173,5.5
-Mary Poppins Returns,171958438,6.7
-Ferdinand,84410380,6.7
-Home Alone 3,30882515,4.5
-The Chronicles of Narnia: The Voyage of the Dawn Treader,104386950,6.3
-The Greatest Showman,174340174,7.5
-101 Dalmatians,136189294,5.7
-A Bug's Life,162798565,7.2
-Babes in Toyland,10218316,6.1
+Title,Year,BoxOffice,ReleaseDate,imdbRating,Genre
+"Hello, Dolly!",1969,400881,1969-12-16 00:00:00,7.0
+Fantastic Mr. Fox,2009,21002919,2009-11-25 00:00:00,7.9
+Avatar,2009,785221649,2009-12-18 00:00:00,7.8
+Free Solo,2018,17541090,2018-12-13 00:00:00,8.1
+National Treasure: Book of Secrets,2007,219964115,2007-12-21 00:00:00,6.5
+Becoming Cousteau,2021,231687,2021-11-24 00:00:00,7.1
+Alvin and the Chipmunks: Chipwrecked,2011,133110742,2011-12-16 00:00:00,4.3
+Alvin and the Chipmunks,2007,217326974,2007-12-14 00:00:00,5.2
+Alvin and the Chipmunks: The Road Chip,2015,85886987,2015-12-18 00:00:00,4.9
+Eragon,2006,75030163,2006-12-15 00:00:00,5.1
+Mrs. Doubtfire,1993,219195243,1993-11-24 00:00:00,7.1
+We Bought a Zoo,2011,75624550,2011-12-23 00:00:00,7.1
+Night at the Museum,2006,250863268,2006-12-22 00:00:00,6.4
+Cheaper by the Dozen 2,2005,82571173,2005-12-21 00:00:00,5.5
+Mary Poppins Returns,2018,171958438,2018-12-19 00:00:00,6.7
+Ferdinand,2017,84410380,2017-12-15 00:00:00,6.7
+Home Alone 3,1997,30882515,1997-12-12 00:00:00,4.5
+The Chronicles of Narnia: The Voyage of the Dawn Treader,2010,104386950,2010-12-10 00:00:00,6.3
+The Greatest Showman,2017,174340174,2017-12-20 00:00:00,7.5
+101 Dalmatians,1996,136189294,1996-11-27 00:00:00,5.7
+A Bug's Life,1998,162798565,1998-11-25 00:00:00,7.2
+Babes in Toyland,1961,10218316,1961-12-14 00:00:00,6.1

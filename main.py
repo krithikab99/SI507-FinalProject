@@ -4,7 +4,9 @@ from datetime import datetime
 import csv
 import os
 import random
+import io
 import plotly.express as px
+from csv import DictReader
 
 festiveDates = {}
 festiveDates['christmas'] = {}
@@ -22,7 +24,7 @@ def isFestiveRelease(releaseDate):
     releaseDate = datetime.strptime(releaseDate, '%Y-%m-%d %H:%M:%S')
     # change based on input accepted in program
     input = 'christmas'
-    monthBeforeValidated = festiveDates[input]['month'] - 1;
+    monthBeforeValidated = festiveDates[input]['month'] - 1
     if(monthBeforeValidated == 0):
         monthBeforeValidated = 12
     monthBefore = datetime(releaseDate.year, monthBeforeValidated, festiveDates[input]['day'])
@@ -39,7 +41,7 @@ def getImdbRating(rating):
     return -1
 #
 def processMovie(moviename):
-    response = requests.get('https://www.omdbapi.com', params = {'t': moviename,'apikey': '2a2776f'}).json()
+    response = requests.get('https://www.omdbapi.com', params = {'t': moviename,'apikey': 'e70fc0a9'}).json()
     #print(response)
 
     if (response and response.get('Response') == 'True'):
@@ -64,7 +66,7 @@ counter = 0
 
 #
 # # # Read cached files
-directory = os.path.join("C:\\", "Users\\krith\\OneDrive\\Desktop\\SI 507\\Final_Project\\cache")
+directory = os.path.join("C:\\","Users\\krith\\OneDrive\\Desktop\\SI 507\\Final_Project\\cache")
 for root, dirs, files in os.walk(directory):
     for file in files:
         print(file)
@@ -76,16 +78,16 @@ for root, dirs, files in os.walk(directory):
                     if line_count == 0:
                         line_count += 1
                     else:
-                        cachedMovieName = row[0];
+                        cachedMovieName = row[0]
                         # cachedMovieName = row[0].split(',')[0];
                         if(cachedMovieName not in cachedMovies):
                             cachedMovies.add(cachedMovieName)
                         line_count += 1
 cachedMovies = set(i.lower() for i in cachedMovies)
-# print('Cached data:')
-# print(len(cachedMovies))
-# print(cachedMovies)
-#
+print('Cached data:')
+print(len(cachedMovies))
+print(cachedMovies)
+
 #
 # # # Process Input source with cache
 sourceFile = open('christmas.csv', encoding="utf-8")
@@ -104,11 +106,11 @@ for inputRecord in inputData.values:
         if (recordToWrite):
             counter = counter + 1
             recordsToWrite.append(recordToWrite)
-
+#
 # # # Write new items from API to cache
 fieldNames = ['Title', 'Year', 'Genre', 'Language', 'BoxOffice', 'ReleasedDate', 'imdbRating']
 randomNumber = random.random()
-fileName = 'Users\\krith\\OneDrive\\Desktop\\SI 507\\Final_Project\\cachecacheFile_' + str(randomNumber) + '.csv'
+fileName = 'cache\\cacheFile_' + str(randomNumber) + '.csv'
 with open(fileName, 'w', newline='') as csvFile:
     csvwriter = csv.DictWriter(csvFile, fieldNames)
     csvwriter.writeheader()
@@ -116,14 +118,44 @@ with open(fileName, 'w', newline='') as csvFile:
 print('Done writing new cache file')
 
 
-# Read updated cache files and prepare datasets
+# Read updated cache files and prepare datasets along with tree structure
+
+
+holiday=input("Which holiday do you want movie recommendations for ? Christmas, Halloween or Valentine's Day :   ")
+if holiday=="christmas":
+    old_new=input("Do you want to watch old movies or new movies?")
+    rating=input("What imdbRating do you prefer? Good or Bad?")   
+    if old_new=="old":
+        directory = os.path.join("C:\\", "Users\\krith\\OneDrive\\Desktop\\SI 507\\Final_Project\\cache")
+        df = pandas.read_csv(directory +'/cacheFile_0.909260870295638.csv')
+        out = df.to_json(orient='records')[1:-1].replace('},{', '} {')
+        with open(directory + '/tree_records.json', 'w') as f:
+            f.write(out)
+        with open(directory + '/cacheFile_0.909260870295638.csv' , 'r') as f:
+            dict_reader = DictReader(f)
+            list_of_dict = list(dict_reader)
+            expectedResult = [d for d in list_of_dict if (d['Year'] < '2003')]
+
+ 
+    else:
+        directory = os.path.join("C:\\", "Users\\krith\\OneDrive\\Desktop\\SI 507\\Final_Project\\cache")
+        df = pandas.read_csv(directory +'/cacheFile_0.909260870295638.csv')
+        with open(directory + '/cacheFile_0.909260870295638.csv' , 'r') as f:
+            dict_reader = DictReader(f)
+            list_of_dict = list(dict_reader)
+            expectedResult = [d for d in list_of_dict if d['Year'] > '2003'] 
+ 
+        
+    print("Top movies based on your suggestion:") 
+    for i in expectedResult:
+        print(i['Title'])  
 featureMovieSet = set()
 festiveRecords = []
 nonFestiveRecords = []
 directory = os.path.join("C:\\", "Users\\krith\\OneDrive\\Desktop\\SI 507\\Final_Project\\cache")
 for root, dirs, files in os.walk(directory):
     for file in files:
-        print(file)
+        # print(file)
         if file.endswith(".csv"):
             with open(directory + '/' + file, 'r') as csv_file:
                 csv_reader = csv.reader(csv_file, delimiter=',')
@@ -132,15 +164,15 @@ for root, dirs, files in os.walk(directory):
                     if line_count == 0:
                         line_count += 1
                     else:
-                        featureMovieName = row[0];
-                        featureYear = row[1];
+                        featureMovieName = row[0]
+                        featureYear = row[1]
                         featureBoxOffice = row[4].replace('$', '')
                         featureBoxOffice = featureBoxOffice.replace(',', '')
-                        featureReleaseDate = row[5];
+                        featureReleaseDate = row[5]
 
-                        print(featureReleaseDate)
-                        featureRating = row[6];
-                        tuple = (featureMovieName, featureBoxOffice, featureRating)
+                        # print(featureReleaseDate)
+                        featureRating = row[6]
+                        tuple = (featureMovieName,featureYear, featureBoxOffice,featureReleaseDate, featureRating)
                         if(featureMovieName not in featureMovieSet):
                             featureMovieSet.add(featureMovieName)
                             if(isFestiveRelease(featureReleaseDate)):
@@ -148,9 +180,9 @@ for root, dirs, files in os.walk(directory):
                             else:
                                 nonFestiveRecords.append(tuple)
                         line_count += 1
-print(festiveRecords)
-print(nonFestiveRecords)
-fieldNames = ['Title', 'BoxOffice', 'imdbRating']
+# print(festiveRecords)
+# print(nonFestiveRecords)
+fieldNames = ['Title', 'Year','BoxOffice','ReleaseDate', 'imdbRating','Genre']
 directory = os.path.join("C:\\", "Users\\krith\\OneDrive\\Desktop\\SI 507\\Final_Project")
 with open(directory + '/festive_data_set.csv','w') as out:
     csv_out=csv.writer(out)
@@ -170,12 +202,49 @@ print('Correlation in movie data set released on non-festive dates')
 print(non_festive_df.corr())
 
 
-non_festive_fig = px.scatter(non_festive_df, x="imdbRating", y="BoxOffice", title="Non Festive movie scatterplot")
-non_festive_fig.show()
+trend1= input("Do you want to know the difference in how the imdb ratings rank against the box office collection for both festive and non-festive movies?")
+if trend1=="yes":
 
-festive_fig = px.scatter(festive_df, x="imdbRating", y="BoxOffice", title="Festive movie scatterplot")
-festive_fig.show()
+    non_festive_fig = px.bar(non_festive_df, x="imdbRating", y="BoxOffice", title="Non Festive movie scatterplot")
+    non_festive_fig.show()
+
+    festive_fig = px.bar(festive_df, x="imdbRating", y="BoxOffice", title="Festive movie scatterplot")
+    festive_fig.show()
+else:
+    print("No problem , we have a few more trends to show you!")
 
 
-# https://www.omdbapi.com/?t=conjuring&apikey=63ba843
+trend2= input("Want to see how the box office collection ranks against the year of release for both festive and non-festive movies?")
+if trend2=="yes":
+    nf_year_fig= px.scatter(non_festive_df, x="BoxOffice", y="Year", title="Non Festive movie scatterplot with box office and year of release")
+    nf_year_fig.show()
 
+    f_year_fig= px.scatter(festive_df, x="BoxOffice", y="Year", title="Festive movie scatterplot with box office and year of release")
+    f_year_fig.show()
+else:
+    print("No problem , we have a few more trends to show you!")
+
+trend3= input("Youll be surprised in how the Year ranks against the imdbRating for both festive and non-festive movies?")
+if trend3=="yes":
+
+    nf_bo_fig= px.scatter(non_festive_df, x="Year", y="imdbRating", title="Non Festive movie line graph where Year ranks against the imdbRating")
+    nf_bo_fig.show()
+
+    f_bo_fig= px.scatter(festive_df, x="Year", y="imdbRating", title="Festive movie line graph where Year ranks against the imdbRating")
+    f_bo_fig.show()
+
+else:
+    print("No problem , we have a few more trends to show you!")
+
+
+trend4= input("Do you want to know the difference in how the Box Office revenue ranks against the year of release wrt to the imdbRating for both festive and non-festive movies?")
+if trend3=="yes":
+    nf_genre_fig= px.scatter(non_festive_df, x="Year", y="BoxOffice",color="imdbRating", title="Non Festive movie scatterplot with revenue and year of release")
+    nf_genre_fig.show()
+
+
+    f_genre_fig= px.scatter(festive_df, x="Year", y="BoxOffice",color="imdbRating", title="Festive movie scatterplot with revenue and year of release")
+    f_genre_fig.show()
+
+else:
+    print("This is the end of the graphs!")

@@ -44,5 +44,5 @@ for line in file:
 
 v_file.close()
 from more_itertools import unique_everseen
-with open('valentines.csv', 'r') as f, open('valentine.csv', 'w') as out_file:
+with open('valentines.json', 'r') as f, open('valentine.json', 'w') as out_file:
     out_file.writelines(unique_everseen(f))
